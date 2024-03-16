@@ -26,6 +26,20 @@ In conclusione, Just a CRUD rappresenta un utile strumento per lo sviluppo rapid
 esempio semplice : 
 
 ```java
+package com.example.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import services.DatabaseRequest;
+import services.QueryBuilder;
+
+
 @RestController
 public class Controller {
     
@@ -47,11 +61,12 @@ public class Controller {
         }
         queryBuilder.stamp(true);
         
-        List<Persona> testissimos = databaseRequest.customQuery(queryBuilder.build(),1, Persona.class);
-        return testissimos;
+        List<Persona> persone = databaseRequest.customQuery(queryBuilder.build(),1, Persona.class);
+        return persone;
     }
 
 }
+
 ```
 
 
