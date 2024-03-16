@@ -23,8 +23,36 @@ In conclusione, Just a CRUD rappresenta un utile strumento per lo sviluppo rapid
 
 
 ## Documentation
+esempio semplice : 
 
+```java
+@RestController
+public class Controller {
+    
+    @Autowired
+    DatabaseRequest databaseRequest;
 
+    @GetMapping("test")
+    @ResponseBody
+    public List<Persona> test(@RequestParam String [] id){
+
+        QueryBuilder queryBuilder = new QueryBuilder();
+
+        queryBuilder.select("*").from("tabella_dummy");
+        queryBuilder.orderBy("id desc");
+        if(id.length <= 1){
+            queryBuilder.where().column("id").equalsTo(id[0]);
+        }else{
+            queryBuilder.where().column("id").in(id);
+        }
+        queryBuilder.stamp(true);
+        
+        List<Persona> testissimos = databaseRequest.customQuery(queryBuilder.build(),1, Persona.class);
+        return testissimos;
+    }
+
+}
+```
 
 
 
