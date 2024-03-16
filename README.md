@@ -1,4 +1,9 @@
 
+## Autore
+
+- [@Beater97](https://github.com/Beater97)
+
+
 # Just a crud
 
 Just a CRUD è una libreria Java progettata per semplificare e accelerare lo sviluppo di operazioni CRUD (Create, Read, Update, Delete) su database relazionali. Si integra strettamente con Spring Framework, sfruttando la potente iniezione di dipendenze di Spring per gestire le connessioni al database e automatizzare le operazioni di database comuni.
@@ -15,11 +20,6 @@ Utilizzando Just a CRUD, gli sviluppatori possono sfruttare la familiarità e le
 
 In conclusione, Just a CRUD rappresenta un utile strumento per lo sviluppo rapido di applicazioni Java che interagiscono con database relazionali, combinando la potenza e la flessibilità del SQL puro con la semplicità e la robustezza del framework Spring.
 
-
-
-## Autore
-
-- [@Beater97](https://github.com/Beater97)
 
 
 ## Documentation
