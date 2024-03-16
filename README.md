@@ -69,6 +69,78 @@ public class Controller {
 
 ```
 
+esempio where dinamica :
+
+```java
+package com.example.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import services.DatabaseRequest;
+import services.QueryBuilder;
+import services.WhereClauseBuilder;
+
+
+@RestController
+public class Controller {
+    
+    @Autowired
+    DatabaseRequest databaseRequest;
+
+    @GetMapping("test")
+    @ResponseBody
+    public List<Persona> test(@RequestParam(name = "nome",required = false) String nome, @RequestParam(name ="congnome",required = false) String cognome, @RequestParam(name ="id",required = false) String id)
+    {
+        QueryBuilder queryBuilder = new QueryBuilder();
+
+        queryBuilder.select("*").from("tabella_dummy");
+        queryBuilder.orderBy("id desc");
+        queryBuilder.stamp(true); //stampa la query
+
+        WhereClauseBuilder whereClause = new WhereClauseBuilder();
+
+        if(id!= null && !id.isBlank() && !id.isEmpty() && isInteger(id)){
+            whereClause.column("id").equalsTo(id);
+        }
+        if(nome != null && !nome.isEmpty() && !nome.isBlank()){
+            whereClause.column("nome").equalsTo(nome);
+        }
+        if(cognome != null && !cognome.isEmpty() && !cognome.isBlank()){
+            whereClause.column("cognome").equalsTo(cognome);
+        }
+
+        if(whereClause.equals(new WhereClauseBuilder())){
+            return null;
+        }
+        
+        queryBuilder.where(whereClause);
+
+        //query in formato stringa, numero di righe richieste, classe
+        List<Persona> persone = databaseRequest.customQuery(queryBuilder.build(),40, Persona.class);
+
+        return persone;
+    }
+
+    public boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+
+}
+
+```
+
 
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
