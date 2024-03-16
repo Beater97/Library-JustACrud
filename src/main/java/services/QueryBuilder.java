@@ -68,9 +68,7 @@ public class QueryBuilder {
         }
         return this;
     }
-
-    // Metodi per groupBy, having, orderBy...
-
+    
     public String build() {
         StringBuilder query = new StringBuilder("SELECT ");
         query.append(selectClause);
