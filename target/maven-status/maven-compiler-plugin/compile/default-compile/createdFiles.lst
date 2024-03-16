@@ -1,0 +1,4 @@
+services\DatabaseRequest.class
+services\QueryBuilder.class
+services\WhereClauseBuilder.class
+services\Beans.class
