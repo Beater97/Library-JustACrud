@@ -76,7 +76,7 @@ public class WhereClauseBuilder {
     }
 
     public String build() {
-        applyCurrentCondition(); // Assicurati che l'ultima condizione sia applicata
+        applyCurrentCondition();
         return String.join(" ", conditions);
     }
 }
