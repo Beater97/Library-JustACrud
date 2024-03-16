@@ -82,10 +82,9 @@ public class QueryBuilder {
 
         if (!this.whereBuilder.build().isEmpty() && !this.whereBuilder.build().isBlank()) {
             query.append(" WHERE ").append(whereBuilder.build());
-        }else if(this.whereClause != null){
+        }else if(!this.whereClause.isEmpty() && !this.whereClause.isBlank()){
             query.append(" WHERE ").append(whereClause);
         }
-
         if (this.groupByClause.length() > 0) {
             query.append(" GROUP BY ").append(this.groupByClause);
         }
