@@ -50,7 +50,7 @@ public class DatabaseRequest {
                 ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                T record = clazz.getDeclaredConstructor().newInstance(); // Crea una nuova istanza dell'oggetto
+                T record = clazz.getDeclaredConstructor().newInstance();
                 ResultSetMetaData metaData = rs.getMetaData();
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {
                     String columnName = metaData.getColumnName(i);
@@ -71,10 +71,10 @@ public class DatabaseRequest {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
-            ps.setMaxRows(maxRow); // Imposta il limite massimo di righe
+            ps.setMaxRows(maxRow);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    T record = clazz.getDeclaredConstructor().newInstance(); // Crea una nuova istanza dell'oggetto
+                    T record = clazz.getDeclaredConstructor().newInstance();
                     ResultSetMetaData metaData = rs.getMetaData();
                     for (int i = 1; i <= metaData.getColumnCount(); i++) {
                         String columnName = metaData.getColumnName(i);
@@ -142,7 +142,6 @@ public class DatabaseRequest {
         if (value instanceof Clob && parameterType == String.class) {
             return true;
         }
-        // Considera altri tipi se necessario
         return false;
     }
 
