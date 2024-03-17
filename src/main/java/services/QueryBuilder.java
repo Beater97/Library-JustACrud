@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class QueryBuilder {
     private StringBuilder selectClause = new StringBuilder();
     private String fromClause = "";
@@ -62,11 +63,17 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder orderBy(String... orderingExpressions) {
-        if (orderingExpressions.length > 0) {
-            this.orderByClause.append(String.join(", ", orderingExpressions));
+    public QueryBuilder orderBy(String field , Ordinamento ordinamento) {
+        if(orderByClause.isEmpty()){
+            this.orderByClause.append(field + " " + ordinamento.name());
+        }else{
+            this.orderByClause.append(" , " + field + " " + ordinamento.name());
         }
         return this;
+    }
+
+    public enum Ordinamento {
+        ASC, DESC
     }
 
     // Metodi per groupBy, having, orderBy...

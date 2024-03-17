@@ -14,6 +14,19 @@ public class WhereClauseBuilder {
         return this;
     }
 
+
+    public boolean isNotEmpty(){
+        boolean response = false;
+
+        if( this.conditions.size() > 0){
+            return true;
+        }
+        if(!this.currentCondition.toString().isEmpty() || !this.currentCondition.toString().isBlank()){
+            return true;
+        }
+        return response;
+    }
+
     public WhereClauseBuilder equalsTo(String value) {
         currentCondition.append(" = '").append(value.replace("'", "''")).append("'");
         return this;
