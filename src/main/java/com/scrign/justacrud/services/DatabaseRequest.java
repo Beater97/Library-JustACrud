@@ -11,12 +11,17 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DatabaseRequest {
@@ -48,7 +53,7 @@ public class DatabaseRequest {
         try (Connection conn = dataSource.getConnection();
                 PreparedStatement ps = conn.prepareStatement(query);
                 ResultSet rs = ps.executeQuery()) {
-
+        
             while (rs.next()) {
                 T record = clazz.getDeclaredConstructor().newInstance();
                 ResultSetMetaData metaData = rs.getMetaData();
@@ -64,6 +69,48 @@ public class DatabaseRequest {
         }
         return records;
     }
+
+    public String customQuery(String query) throws JsonProcessingException {
+		List<Map<String, Object>> records = new ArrayList<>();
+		try (Connection conn = dataSource.getConnection();
+				PreparedStatement ps = conn.prepareStatement(query);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Map<String, Object> record = new LinkedHashMap<>();
+				ResultSetMetaData metaData = rs.getMetaData();
+				for (int i = 1; i <= metaData.getColumnCount(); i++) {
+					record.put(metaData.getColumnName(i), rs.getString(i));
+				}
+				records.add(record);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.writeValueAsString(records);
+	}
+
+    public String customQuery(String query,int maxRow) throws JsonProcessingException {
+		List<Map<String, Object>> records = new ArrayList<>();
+		try (Connection conn = dataSource.getConnection();
+				PreparedStatement ps = conn.prepareStatement(query);
+				ResultSet rs = ps.executeQuery()) {
+
+                ps.setMaxRows(maxRow);
+			while (rs.next()) {
+				Map<String, Object> record = new LinkedHashMap<>();
+				ResultSetMetaData metaData = rs.getMetaData();
+				for (int i = 1; i <= metaData.getColumnCount(); i++) {
+					record.put(metaData.getColumnName(i), rs.getString(i));
+				}
+				records.add(record);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.writeValueAsString(records);
+	}
     
     public <T> List<T> customQuery(String query, int maxRow, Class<T> clazz) {
         List<T> records = new ArrayList<>();
@@ -90,6 +137,53 @@ public class DatabaseRequest {
         return records;
     }
 
+    public <T> T findFirst(String query, int maxRow, Class<T> clazz) {
+        List<T> records = new ArrayList<>();
+    
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setMaxRows(maxRow);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    T record = clazz.getDeclaredConstructor().newInstance();
+                    ResultSetMetaData metaData = rs.getMetaData();
+                    for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                        String columnName = metaData.getColumnName(i);
+                        Object columnValue = rs.getObject(i);
+                        setProperty(record, columnName, columnValue);
+                    }
+                    records.add(record);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return records.getFirst();
+    }
+
+    public <T> T findFirst(String query, Class<T> clazz) {
+        List<T> records = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query);
+                ResultSet rs = ps.executeQuery()) {
+        
+            while (rs.next()) {
+                T record = clazz.getDeclaredConstructor().newInstance();
+                ResultSetMetaData metaData = rs.getMetaData();
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                    String columnName = metaData.getColumnName(i);
+                    Object columnValue = rs.getObject(i);
+                    setProperty(record, columnName, columnValue);
+                }
+                records.add(record);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return records.getFirst();
+    }
 
     private <T> void setProperty(T record, String fieldName, Object fieldValue) {
         if (fieldValue == null)
