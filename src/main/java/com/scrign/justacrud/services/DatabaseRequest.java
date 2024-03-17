@@ -1,4 +1,4 @@
-package services;
+package com.scrign.justacrud.services;
 
 import java.lang.reflect.Method;
 import java.sql.Blob;
