@@ -71,6 +71,7 @@ public class QueryBuilder {
         }
         return this;
     }
+    
     public enum Ordinamento {
         ASC, DESC
     }
